@@ -62,12 +62,35 @@ function App() {
 
   return (
     <div className="App">
-      <label htmlFor="apiKey">Api Key (only used locally)</label>
-      <input type="password" value={apiKey} onChange={onChange}></input>
-      <button onClick={saveKeyLocally}>Save Key Locally</button>
-      <button onClick={getLocalKey}>Get Locally Saved Key</button>
-      <button onClick={transcribe}>Transcribe</button>
-      <p>{text}</p>
+      <div className="container">
+        <p>
+          This app uses the Deepgram API to turn speech into text! Sign up and
+          generate an api key{' '}
+          <a className="App-link" href="https://console.deepgram.com/signup">
+            https://console.deepgram.com/signup
+          </a>{' '}
+          Your key stays in the browser and is only used to call the
+          DeepgramAPI. Saving a key only stores it in you browser's
+          localStorage.{' '}
+        </p>
+        <label htmlFor="apiKey">Api Key (only used locally)</label>
+        <input
+          className="apiInput"
+          type="password"
+          value={apiKey}
+          onChange={onChange}
+        ></input>
+        <button className="button" onClick={saveKeyLocally}>
+          Save Key Locally
+        </button>
+        <button className="button" onClick={getLocalKey}>
+          Get Locally Saved Key
+        </button>
+        <button className="button" onClick={transcribe}>
+          Transcribe
+        </button>
+        <p>{text}</p>
+      </div>
     </div>
   )
 }
