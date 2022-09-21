@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import './App.css'
 
 function App() {
@@ -49,10 +49,23 @@ function App() {
     setApiKey(event.target.value)
   }
 
+  const saveKeyLocally = () => {
+    localStorage.setItem('apiKey', apiKey)
+  }
+
+  const getLocalKey = () => {
+    const apiKey = localStorage.getItem('apiKey')
+    if (apiKey) {
+      setApiKey(apiKey)
+    }
+  }
+
   return (
     <div className="App">
       <label htmlFor="apiKey">Api Key (only used locally)</label>
-      <input type="text" value={apiKey} onChange={onChange}></input>
+      <input type="password" value={apiKey} onChange={onChange}></input>
+      <button onClick={saveKeyLocally}>Save Key Locally</button>
+      <button onClick={getLocalKey}>Get Locally Saved Key</button>
       <button onClick={transcribe}>Transcribe</button>
       <p>{text}</p>
     </div>
