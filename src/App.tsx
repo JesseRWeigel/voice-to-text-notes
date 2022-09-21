@@ -1,26 +1,62 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import './App.css'
 
 function App() {
+  const [apiKey, setApiKey] = React.useState('')
+  const [text, setText] = React.useState('')
+
+  const transcribe = async () => {
+    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+      console.log({ stream })
+      if (!MediaRecorder.isTypeSupported('audio/webm'))
+        return alert('Browser not supported')
+      const mediaRecorder = new MediaRecorder(stream, {
+        mimeType: 'audio/webm',
+      })
+      const socket = new WebSocket('wss://api.deepgram.com/v1/listen', [
+        'token',
+        apiKey,
+      ])
+      socket.onopen = () => {
+        console.log({ event: 'onopen' })
+        mediaRecorder.addEventListener('dataavailable', async (event) => {
+          if (event.data.size > 0 && socket.readyState == 1) {
+            socket.send(event.data)
+          }
+        })
+        mediaRecorder.start(1000)
+      }
+
+      socket.onmessage = (message) => {
+        const received = JSON.parse(message.data)
+        const transcript = received.channel.alternatives[0].transcript
+        if (transcript && received.is_final) {
+          setText(text + transcript)
+        }
+      }
+
+      socket.onclose = () => {
+        console.log({ event: 'onclose' })
+      }
+
+      socket.onerror = (error) => {
+        console.log({ event: 'onerror', error })
+      }
+    })
+  }
+
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setApiKey(event.target.value)
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <label htmlFor="apiKey">Api Key (only used locally)</label>
+      <input type="text" value={apiKey} onChange={onChange}></input>
+      <button onClick={transcribe}>Transcribe</button>
+      <p>{text}</p>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
