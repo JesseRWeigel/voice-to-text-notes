@@ -18,8 +18,8 @@
 		"web-vitals": "^2.1.0"
 	},
 	"scripts": {
-		"format": "prettier --check src/*",
-		"lint": "eslint src/*.{ts,tsx}",
+		"format": "prettier --write src/*",
+		"lint": "eslint --fix src/*.{ts,tsx}",
 		"predeploy": "npm run build",
 		"deploy": "gh-pages -d build",
 		"start": "react-scripts start",
