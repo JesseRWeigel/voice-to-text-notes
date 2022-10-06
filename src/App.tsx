@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import './App.css'
 
 function App() {
@@ -71,7 +71,7 @@ function App() {
             https://console.deepgram.com/signup
           </a>{' '}
           Your key stays in the browser and is only used to call the
-          DeepgramAPI. Saving a key only stores it in you browser's
+          DeepgramAPI. Saving a key only stores it in you browser&apos;s
           localStorage.{' '}
         </p>
         <label htmlFor="apiKey">Api Key (only used locally)</label>
