@@ -3,7 +3,7 @@ import './App.css'
 
 function App() {
   const [apiKey, setApiKey] = React.useState('')
-  const [text, setText] = React.useState('')
+  const [transcripts, setTranscripts] = React.useState<string[]>([]);
 
   const transcribe = async () => {
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
@@ -31,7 +31,7 @@ function App() {
         const received = JSON.parse(message.data)
         const transcript = received.channel.alternatives[0].transcript
         if (transcript && received.is_final) {
-          setText(text + transcript)
+          setTranscripts(prev => [...prev, transcript]);
         }
       }
 
@@ -89,7 +89,9 @@ function App() {
         <button className="button" onClick={transcribe}>
           Transcribe
         </button>
-        <p>{text}</p>
+        {transcripts.map(transcript => (
+          <p key={transcript}>{transcript}</p>
+        ))}
       </div>
     </div>
   )
