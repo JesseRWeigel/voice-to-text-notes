@@ -8,7 +8,7 @@ We take our [Code of Conduct](CODE_OF_CONDUCT.md) very seriously, and all contri
 
 Before you begin:
 
-- Have you read our [Code of Conduct](https://github.com/JesseRWeigel/voice-to-text-notes/blob/main/CODE_OF_CONDUCT.md)?
+- Have you read our [Code of Conduct](CODE_OF_CONDUCT.md)?
 - Check out [existing issues](https://github.com/JesseRWeigel/voice-to-text-notes/issues)
 
 If you're looking to start learning how to work with this repository, this document tries to provide all the resources to get you from confusion to productivity.
@@ -38,7 +38,7 @@ We really want to make space for all developers to feel comfortable and supporte
       - [Suggested Changes](#suggested-changes)
     - [Tips and Gotchas](#tips-and-gotchas)
   - [Reporting a bug](#reporting-a-bug)
-  - [Labelling Conventions](#labelling-conventions)
+    - [Labelling Conventions](#labelling-conventions)
 
 ## What type of contributions we're looking for
 
@@ -137,7 +137,7 @@ When filing an issue, make sure to answer these three questions:
 - What did you expect to see?
 - What did you see instead?
 
-## Labelling Conventions
+### Labelling Conventions
 
 This repository has three basic types of labels:
 
