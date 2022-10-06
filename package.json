@@ -18,6 +18,7 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
+    "format": "yarn prettier --check .",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "start": "react-scripts start",
@@ -44,6 +45,7 @@
     ]
   },
   "devDependencies": {
-    "gh-pages": "^4.0.0"
+    "gh-pages": "^4.0.0",
+    "prettier": "2.7.1"
   }
 }
