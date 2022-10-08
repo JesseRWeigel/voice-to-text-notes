@@ -1,52 +1,19 @@
 import React from "react";
 import "./App.css";
+import { useTranscribe } from "./hooks/useTranscribe";
 
 function App() {
 	const [apiKey, setApiKey] = React.useState("");
-	const [transcripts, setTranscripts] = React.useState<Record<string, string>>(
-		{}
-	);
 
-	const transcribe = async () => {
-		navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-			console.log({ stream });
-			if (!MediaRecorder.isTypeSupported("audio/webm"))
-				return alert("Browser not supported");
-			const mediaRecorder = new MediaRecorder(stream, {
-				mimeType: "audio/webm",
-			});
-			const socket = new WebSocket("wss://api.deepgram.com/v1/listen", [
-				"token",
-				apiKey,
-			]);
-			socket.onopen = () => {
-				console.log({ event: "onopen" });
-				mediaRecorder.addEventListener("dataavailable", async (event) => {
-					if (event.data.size > 0 && socket.readyState == 1) {
-						socket.send(event.data);
-					}
-				});
-				mediaRecorder.start(1000);
-			};
-
-			socket.onmessage = (message) => {
-				const received = JSON.parse(message.data);
-				const transcript = received.channel.alternatives[0].transcript;
-				if (transcript && received.is_final) {
-					const id = received.metadata.request_id;
-					setTranscripts((prev) => ({ ...prev, [id]: transcript }));
-				}
-			};
-
-			socket.onclose = () => {
-				console.log({ event: "onclose" });
-			};
-
-			socket.onerror = (error) => {
-				console.log({ event: "onerror", error });
-			};
-		});
-	};
+	const {
+		isTranscribing,
+		isRecording,
+		startTranscribe,
+		stopTranscribe,
+		transcripts,
+		pauseTranscribe,
+		resumeTranscribe,
+	} = useTranscribe({ apiKey });
 
 	const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setApiKey(event.target.value);
@@ -60,6 +27,15 @@ function App() {
 		const apiKey = localStorage.getItem("apiKey");
 		if (apiKey) {
 			setApiKey(apiKey);
+		}
+	};
+
+	const handlePlayPause = () => {
+		if (!isTranscribing) return;
+		if (isRecording) {
+			pauseTranscribe();
+		} else {
+			resumeTranscribe();
 		}
 	};
 
@@ -89,9 +65,21 @@ function App() {
 				<button className="button" onClick={getLocalKey}>
 					Get Locally Saved Key
 				</button>
-				<button className="button" onClick={transcribe}>
-					Transcribe
-				</button>
+				{isTranscribing ? (
+					<>
+						<button className="button" onClick={handlePlayPause}>
+							{isRecording ? "⏸️  Pause" : "▶️ Resume"}
+						</button>
+						<button className="button" onClick={stopTranscribe}>
+							Stop Transcribe
+						</button>
+					</>
+				) : (
+					<button className="button" onClick={startTranscribe}>
+						Transcribe
+					</button>
+				)}
+
 				{Object.entries(transcripts).map(([id, transcript]) => (
 					<p key={id}>{transcript}</p>
 				))}
