@@ -1,3 +1,5 @@
+import cypress from "cypress";
+
 describe("some basic sanity tests", () => {
 	before(() => {
 		cy.log("**Navigate to the application url**");
@@ -34,6 +36,13 @@ describe("some basic sanity tests", () => {
 
 	it("should have API key field as a password field", () => {
 		cy.get(".apiInput").should("have.attr", "type", "password");
+
+		cy.log("**User should be able to type in the API key input field**");
+		cy.get(".apiInput")
+			.type("someRandomAPIKey")
+			.then(() => {
+				cy.get(".apiInput").should("have.value", "someRandomAPIKey");
+			});
 	});
 
 	it("should display all of the buttons correctly", () => {
