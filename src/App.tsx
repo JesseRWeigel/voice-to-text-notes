@@ -1,19 +1,24 @@
 import React from "react";
 import "./App.css";
-import { useTranscribe } from "./hooks/useTranscribe";
+import { Transcribe, useTranscribe } from "./hooks/useTranscribe";
 
 function App() {
 	const [apiKey, setApiKey] = React.useState("");
+
+	const [transcripts, setTranscripts] = React.useState<Transcribe>({});
+
+	const handleTranscribe = (data: Transcribe) => {
+		setTranscripts((prev) => ({ ...prev, ...data }));
+	};
 
 	const {
 		isTranscribing,
 		isRecording,
 		startTranscribe,
 		stopTranscribe,
-		transcripts,
 		pauseTranscribe,
 		resumeTranscribe,
-	} = useTranscribe({ apiKey });
+	} = useTranscribe({ apiKey, onTranscribe: handleTranscribe });
 
 	const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setApiKey(event.target.value);
