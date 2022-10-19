@@ -1,14 +1,17 @@
 import React from "react";
 import "./App.css";
-import { Transcribe, useTranscribe } from "./hooks/useTranscribe";
+import { useTranscribe } from "./hooks/useTranscribe";
+import Editor from "./components/Editor";
 
 function App() {
 	const [apiKey, setApiKey] = React.useState("");
 
-	const [transcripts, setTranscripts] = React.useState<Transcribe>({});
+	const [fullTranscripts, setFullTranscripts] = React.useState<Array<string>>(
+		[]
+	);
 
-	const handleTranscribe = (data: Transcribe) => {
-		setTranscripts((prev) => ({ ...prev, ...data }));
+	const handleTranscribe = (transcriptText: string) => {
+		setFullTranscripts((prev) => [...prev, transcriptText]);
 	};
 
 	const {
@@ -47,16 +50,21 @@ function App() {
 	return (
 		<div className="App">
 			<div className="container">
-				<p>
+				<pre className="app-info">
 					This app uses the Deepgram API to turn speech into text! Sign up and
 					generate an api key{" "}
-					<a className="App-link" href="https://console.deepgram.com/signup">
+					<a
+						className="App-link"
+						href="https://console.deepgram.com/signup"
+						rel="noreferrer"
+						target="_blank"
+					>
 						https://console.deepgram.com/signup
 					</a>{" "}
 					Your key stays in the browser and is only used to call the
 					DeepgramAPI. Saving a key only stores it in you browser&apos;s
 					localStorage.{" "}
-				</p>
+				</pre>
 				<label htmlFor="apiKey">Api Key (only used locally)</label>
 				<input
 					className="apiInput"
@@ -84,11 +92,8 @@ function App() {
 						Transcribe
 					</button>
 				)}
-
-				{Object.entries(transcripts).map(([id, transcript]) => (
-					<p key={id}>{transcript}</p>
-				))}
 			</div>
+			<Editor transcripts={fullTranscripts} />
 		</div>
 	);
 }

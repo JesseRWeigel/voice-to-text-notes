@@ -1,10 +1,8 @@
 import { useRef, useState } from "react";
 
-export type Transcribe = Record<string, string>;
-
 export interface UseTranscribeParam {
 	apiKey?: string;
-	onTranscribe?: (transcribe: Transcribe) => void;
+	onTranscribe?: (transcriptText: string) => void;
 }
 
 export const useTranscribe = ({ apiKey, onTranscribe }: UseTranscribeParam) => {
@@ -22,13 +20,10 @@ export const useTranscribe = ({ apiKey, onTranscribe }: UseTranscribeParam) => {
 	const onMessage = (message: MessageEvent) => {
 		const data = JSON.parse(message.data);
 
-		const transcript = data.channel.alternatives[0].transcript;
-		if (transcript && data.is_final) {
-			const { request_id: id } = data.metadata.request_id;
+		const transcriptText = data.channel.alternatives[0].transcript;
 
-			if (onTranscribe) {
-				onTranscribe({ [id]: transcript });
-			}
+		if (transcriptText && data.is_final && onTranscribe) {
+			onTranscribe(transcriptText);
 		}
 	};
 

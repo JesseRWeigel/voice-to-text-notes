@@ -2,12 +2,14 @@
 	text-align: center;
 	background-color: #282c34;
 	min-height: 100vh;
-	display: flex;
-	flex-direction: column;
+	display: grid;
 	align-items: center;
 	justify-content: center;
 	font-size: calc(8px + 2vmin);
 	color: white;
+	padding: 0 3rem;
+	grid-template-columns: 1fr 1fr;
+	gap: 1rem;
 }
 
 .App-link {
@@ -46,4 +48,25 @@
 	margin: 4px 2px;
 	cursor: pointer;
 	border-radius: 4px;
+}
+
+.app-info {
+	border: 1px solid #535353;
+	text-align: left;
+	width: 100%;
+	white-space: normal;
+	border-radius: 18px;
+	font-size: 14px;
+	padding: 20px;
+}
+
+.text-container {
+	border: 1px solid #535353;
+	text-align: left;
+	white-space: normal;
+	border-radius: 18px;
+	font-size: 14px;
+	padding: 20px;
+	flex: 1;
+	height: 80vh;
 }
