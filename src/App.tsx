@@ -47,6 +47,9 @@ function App() {
 		}
 	};
 
+	const handleTextChange = (editedText: string[]) =>
+		setFullTranscripts(editedText);
+
 	return (
 		<div className="App">
 			<div className="container">
@@ -93,7 +96,11 @@ function App() {
 					</button>
 				)}
 			</div>
-			<Editor transcripts={fullTranscripts} />
+			<Editor
+				transcripts={fullTranscripts}
+				readOnly={isTranscribing}
+				onChange={handleTextChange}
+			/>
 		</div>
 	);
 }
