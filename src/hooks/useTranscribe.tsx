@@ -2,13 +2,13 @@ import { useRef, useState } from "react";
 
 export interface UseTranscribeParam {
 	apiKey?: string;
+	onTranscribe?: (transcriptText: string) => void;
 }
 
-export const useTranscribe = ({ apiKey }: UseTranscribeParam) => {
+export const useTranscribe = ({ apiKey, onTranscribe }: UseTranscribeParam) => {
 	const [isTranscribing, setIsTranscibing] = useState(false);
 	const [isRecording, setIsRecording] = useState(false);
 	const [error, setError] = useState<Error | null>(null);
-	const [transcripts, setTranscripts] = useState<Record<string, string>>({});
 
 	const recorder = useRef<MediaRecorder | null>(null);
 	const deepgramSocket = useRef<WebSocket | null>(null);
@@ -20,10 +20,10 @@ export const useTranscribe = ({ apiKey }: UseTranscribeParam) => {
 	const onMessage = (message: MessageEvent) => {
 		const data = JSON.parse(message.data);
 
-		const transcript = data.channel.alternatives[0].transcript;
-		if (transcript && data.is_final) {
-			const id = data.metadata.request_id;
-			setTranscripts((prev) => ({ ...prev, [id]: transcript }));
+		const transcriptText = data.channel.alternatives[0].transcript;
+
+		if (transcriptText && data.is_final && onTranscribe) {
+			onTranscribe(transcriptText);
 		}
 	};
 
@@ -126,7 +126,6 @@ export const useTranscribe = ({ apiKey }: UseTranscribeParam) => {
 
 		deepgramSocket.current?.close();
 		deepgramSocket.current = null;
-		setTranscripts({});
 		setIsTranscibing(false);
 		setIsRecording(false);
 	};
@@ -139,6 +138,5 @@ export const useTranscribe = ({ apiKey }: UseTranscribeParam) => {
 		stopTranscribe,
 		pauseTranscribe,
 		resumeTranscribe,
-		transcripts,
 	};
 };
